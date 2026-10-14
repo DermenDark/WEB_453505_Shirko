@@ -1,0 +1,78 @@
+@page
+@model LRs.Pages_Bikes.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Bike</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Bike.Id" />
+            <div class="form-group">
+                
+                <label asp-for="Bike.Name" class="control-label"></label>
+                <input asp-for="Bike.Name" class="form-control" />
+                <span asp-validation-for="Bike.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Bike.Description" class="control-label"></label>
+                <input asp-for="Bike.Description" class="form-control" />
+                <span asp-validation-for="Bike.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Bike.CategoryId" class="control-label"></label>
+                <select asp-for="Bike.CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+                <span asp-validation-for="Bike.CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Bike.Price" class="control-label"></label>
+                <input asp-for="Bike.Price" class="form-control" />
+                <span asp-validation-for="Bike.Price" class="text-danger"></span>
+            </div>
+            @if (!string.IsNullOrWhiteSpace(Model.Bike.Image))
+            {
+                <div class="mb-3">
+                    <label class="form-label">Текущее изображение</label>
+
+                    <img src="@Model.Bike.Image"
+                         alt="@Model.Bike.Name"
+                         class="img-thumbnail d-block"
+                         style="max-width: 300px; max-height: 220px; object-fit: contain;" />
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="Image" class="control-label">
+                    Новое изображение
+                </label>
+
+                <input asp-for="Image"
+                       type="file"
+                       class="form-control"
+                       accept="image/*" />
+
+                <span asp-validation-for="Image"
+                      class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

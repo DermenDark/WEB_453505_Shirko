@@ -1,0 +1,6 @@
+@WEB_453505_Shirko.API_HostAddress = http://localhost:5121
+
+GET {{WEB_453505_Shirko.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

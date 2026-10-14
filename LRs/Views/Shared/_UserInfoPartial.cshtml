@@ -1,0 +1,32 @@
+﻿@{
+    var userEmail = "User@gmail.com";
+    var userAvatar = Url.Content("~/images/default-profile-picture.png");
+}
+@await Component.InvokeAsync("CartSummary")
+<div class="dropdown ms-4 nav-color">
+    <button class="btn btn-secondary dropdown-toggle"
+            type="button" id="dropdownMenuButton"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+        @userEmail
+        <img src="@userAvatar" width="30"
+             alt="User" class="rounded nav-color" />
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <li>
+            <span class="dropdown-item-text">
+                <img src="@userAvatar"
+                     width="50" alt="User" class="rounded" />
+                @userEmail
+            </span>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <form asp-controller="Account" asp-action="Logout" method="POST">
+                <button id="logout" type="submit" class="nav-link btn btn-link text-dark">
+                    Logout
+                </button>
+            </form>
+        </li>
+    </ul>
+</div>

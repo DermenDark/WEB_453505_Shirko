@@ -1,0 +1,10 @@
+﻿@using LRs.Components
+@model CartSummaryViewModel
+
+<a class="navbar-text ms-auto"
+   asp-controller="Cart"
+   asp-action="Index">
+    @Model.TotalAmount.ToString("0.00") руб
+    <i class="bi bi-cart"></i>
+    (@Model.TotalCount)
+</a>
