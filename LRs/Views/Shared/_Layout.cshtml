@@ -13,19 +13,40 @@
 <body>
     <header>
         <div class="container-fluid">
-            <nav class="navbar bg-dark navbar-expand-md border-bottom border-body" data-bs-theme="dark">
+            <nav class="navbar bg-dark navbar-expand-md border-bottom border-body"
+                 data-bs-theme="dark">
+
                 <div class="container-fluid">
-                    
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <partial name="_MenuPartial" />
+
+                        @if (User.Identity?.IsAuthenticated != true)
+                        {
+                            <ul class="navbar-nav ms-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                       asp-controller="Account"
+                                       asp-action="Login"
+                                       asp-route-returnUrl="@Context.Request.Path">
+                                        Войти
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                       asp-controller="Account"
+                                       asp-action="Register">
+                                        Зарегистрироваться
+                                    </a>
+                                </li>
+                            </ul>
+                        }
+                        else
+                        {
+                            <partial name="_UserInfoPartial" />
+                        }
                     </div>
                 </div>
-                <a asp-controller="Account"
-                   asp-action="Login"
-                   asp-route-returnUrl="@Context.Request.Path">
-                    Войти
-                </a>
-                <partial name="_UserInfoPartial" />
             </nav>
         </div><!-- container - конец -->
     </header>

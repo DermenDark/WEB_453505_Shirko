@@ -4,6 +4,7 @@ using LRs.Components;
 using LRs.Extensions;
 using LRs.HelperClasses;
 using LRs.Services.Authentication;
+using LRs.Services.FileService;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -99,6 +100,7 @@ builder.Services.Configure<KeycloakData>(
     builder.Configuration.GetSection("KeycloakData"));
 
 builder.Services.AddHttpClient<ITokenAccessor, KeycloakTokenAccessor>();
+builder.Services.AddScoped<IFileService, LocalFileService>();
 
 var apiBaseUri = uriData.ApiUri.TrimEnd('/') + "/";
 
@@ -124,7 +126,7 @@ if (!app.Environment.IsDevelopment())
 
 
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();

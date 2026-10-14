@@ -1,0 +1,92 @@
+﻿@model LRs.Models.RegisterUserViewModel
+
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <h1 class="mb-4">Регистрация</h1>
+
+            <form asp-controller="Account"
+                  asp-action="Register"
+                  method="post"
+                  enctype="multipart/form-data">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3">
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+
+                    <input asp-for="Email"
+                           class="form-control"
+                           type="email"
+                           autocomplete="email" />
+
+                    <span asp-validation-for="Email"
+                          class="text-danger">
+                    </span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label"></label>
+
+                    <input asp-for="Password"
+                           class="form-control"
+                           autocomplete="new-password" />
+
+                    <span asp-validation-for="Password"
+                          class="text-danger">
+                    </span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ConfirmPassword"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="ConfirmPassword"
+                           class="form-control"
+                           autocomplete="new-password" />
+
+                    <span asp-validation-for="ConfirmPassword"
+                          class="text-danger">
+                    </span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Avatar" class="form-label"></label>
+
+                    <input asp-for="Avatar"
+                           class="form-control"
+                           type="file"
+                           accept=".jpg,.jpeg,.png,.gif,.webp" />
+
+                    <span asp-validation-for="Avatar"
+                          class="text-danger">
+                    </span>
+
+                    <div class="form-text">
+                        Необязательно. JPG, PNG, GIF или WebP,
+                        размер до 5 МБ.
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">
+                    Зарегистрироваться
+                </button>
+
+                <div class="mt-3 text-center">
+                    Уже зарегистрированы?
+                    <a asp-controller="Account"
+                       asp-action="Login">
+                        Войти
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
