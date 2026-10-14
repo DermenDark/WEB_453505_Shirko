@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using LRs.Services.BikeProductService;
+﻿using LRs.ApiService;
 using LRs.Services.BikeCategoryService;
-using LRs.ApiService;
+using LRs.Services.BikeProductService;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WEB_453505_Shirko.Controllers
 {
@@ -17,7 +18,7 @@ namespace WEB_453505_Shirko.Controllers
             _service = service;
             _categoryService = categoryService;
         }
-
+        [AllowAnonymous]
         public async Task<IActionResult> Index(
             string? categoryNormalizedName,
             int pageNo = 1)

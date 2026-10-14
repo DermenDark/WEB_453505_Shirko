@@ -53,7 +53,11 @@ builder.Services
 
         options.DefaultChallengeScheme = "keycloak";
     })
-    .AddCookie()
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = "WEB_453505_Shirko.Auth";
+        options.Cookie.HttpOnly = true;
+    })
     .AddOpenIdConnect("keycloak", options =>
     {
         var authority =
@@ -72,6 +76,14 @@ builder.Services
         options.Scope.Add("openid");
         options.SaveTokens = true;
         options.RequireHttpsMetadata = false;
+
+        // Используем claim "role" без автоматического переименования.
+        options.MapInboundClaims = false;
+        options.TokenValidationParameters =
+            new TokenValidationParameters
+            {
+                RoleClaimType = "role"
+            };
     });
 
 
@@ -122,8 +134,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages()
     .RequireAuthorization("admin");

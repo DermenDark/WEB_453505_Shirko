@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using WEB_453505_Shirko.API;
+using Microsoft.IdentityModel.Tokens;
 using WEB_453505_Shirko.API.Data;
 using WEB_453505_Shirko.API.Extensions;
 using WEB_453505_Shirko.API.Models;
@@ -12,26 +13,49 @@ using WEB_453505_Shirko.API.UseCases;
 var builder = WebApplication.CreateBuilder(args);
 var authServer = builder.Configuration
     .GetSection("AuthServer")
-    .Get<AuthServerData>();
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, o =>
+    .Get<AuthServerData>()
+    ?? throw new InvalidOperationException(
+        "Не найдены настройки AuthServer.");
+
+if (string.IsNullOrWhiteSpace(authServer.Host) ||
+    string.IsNullOrWhiteSpace(authServer.Realm))
+{
+    throw new InvalidOperationException(
+        "Проверь настройки AuthServer:Host и AuthServer:Realm.");
+}
+
+var realmUrl =
+    $"{authServer.Host.TrimEnd('/')}/realms/{authServer.Realm}";
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
     {
-        // Адрес метаданных конфигурации OpenID 
-        o.MetadataAddress = $"{authServer.Host}/realms/{authServer.Realm}/.well-known/openid-configuration"; 
+        options.Authority = realmUrl;
 
-        // Authority сервера аутентификации 
-        o.Authority = $"{authServer.Host}/realms/{authServer.Realm}";
+        options.MetadataAddress =
+            $"{realmUrl}/.well-known/openid-configuration";
 
-        // Audience для токена JWT 
-        o.Audience = "account";
+        options.Audience = "account";
 
-        // Запретить HTTPS для использования локальной версии Keycloak 
-        // В рабочем проекте должно быть true 
-        o.RequireHttpsMetadata = false;
+        // Для локального Keycloak по HTTP.
+        options.RequireHttpsMetadata = false;
+
+        // Роль из JWT будет читаться из claim "role".
+        options.MapInboundClaims = false;
+
+        options.TokenValidationParameters =
+            new TokenValidationParameters
+            {
+                RoleClaimType = "role"
+            };
     });
-builder.Services.AddAuthorization(opt =>
+
+builder.Services.AddAuthorization(options =>
     {
-        opt.AddPolicy("admin", p => p.RequireRole("POWER-USER"));
+        options.AddPolicy(
+            "admin",
+            policy => policy.RequireRole("POWER-USER"));
     });
 
 builder.Services.AddControllersWithViews();
@@ -64,20 +88,21 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-//app.MapStaticAssets() со сборки
-app.UseStaticFiles();
-// с диска читает
-app.MapIEndpoints();
 app.UseRouting();
 
 app.UseAuthentication();
+
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapIEndpoints();
 
 app.Run();

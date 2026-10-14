@@ -11,7 +11,6 @@ namespace LRs.Extensions
         {
             builder.Services.AddScoped<IBikeCategoryService, MemoryCategoryService>();
             builder.Services.AddScoped<IBikeProductService, MemoryProductService>();
-            builder.Services.Configure<KeycloakData>(builder.Configuration.GetSection("Keycloak"));
         }
     }
 }

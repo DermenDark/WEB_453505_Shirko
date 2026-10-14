@@ -62,8 +62,6 @@ public class ApiProductService : IProductService
     {
         try
         {
-            await _tokenAccessor.SetAuthorizationHeaderAsync(
-                _httpClient, isClient: false);
 
             var baseAddress = _httpClient.BaseAddress
                 ?? throw new InvalidOperationException(
@@ -120,9 +118,6 @@ public class ApiProductService : IProductService
             // Размер страницы.
             var separator = urlString.ToString().Contains("?") ? "&" : "?";
             urlString.Append($"{separator}pageSize={_pageSize}");
-
-            await _tokenAccessor.SetAuthorizationHeaderAsync(
-                _httpClient, isClient: false);
 
             using var response = await _httpClient.GetAsync(
                 new Uri(urlString.ToString()));
