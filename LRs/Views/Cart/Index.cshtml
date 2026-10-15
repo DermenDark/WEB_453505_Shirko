@@ -1,0 +1,98 @@
+﻿@model WEB_453505_Shirko.Domain.Models.Cart
+
+@{
+    ViewData["Title"] = "Корзина";
+}
+
+<h1>Корзина</h1>
+
+@if (TempData["CartError"] is string error)
+{
+    <div class="alert alert-danger">
+        @error
+    </div>
+}
+
+@if (Model.CartItems.Count == 0)
+{
+    <p>Корзина пуста.</p>
+
+    <a asp-controller="Product"
+       asp-action="Index"
+       class="btn btn-primary">
+        Вернуться в каталог
+    </a>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Велосипед</th>
+                    <th>Цена</th>
+                    <th>Количество</th>
+                    <th>Стоимость</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var entry in Model.CartItems.Values)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(entry.Item.Image))
+                            {
+                                <img src="@entry.Item.Image"
+                                     alt="@entry.Item.Name"
+                                     style="width: 90px; height: 65px; object-fit: cover;" />
+                            }
+
+                            <div>@entry.Item.Name</div>
+                        </td>
+
+                        <td>@entry.Item.Price.ToString("F2")</td>
+
+                        <td>@entry.Count</td>
+
+                        <td>
+                            @((entry.Item.Price * entry.Count).ToString("F2"))
+                        </td>
+
+                        <td>
+                            <form asp-controller="Cart"
+                                  asp-action="Remove"
+                                  asp-route-id="@entry.Item.Id"
+                                  method="post">
+
+                                <button type="submit"
+                                        class="btn btn-outline-danger btn-sm">
+                                    Удалить
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <h4>
+        Всего позиций: @Model.Count
+    </h4>
+
+    <h4>
+        Итого: @Model.TotalPrice.ToString("F2")
+    </h4>
+
+    <form asp-controller="Cart"
+          asp-action="Clear"
+          method="post">
+
+        <button type="submit"
+                class="btn btn-danger">
+            Очистить корзину
+        </button>
+    </form>
+}

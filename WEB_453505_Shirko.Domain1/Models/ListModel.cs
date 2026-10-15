@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WEB_453505_Shirko.Domain.Entities;
 
 namespace WEB_453505_Shirko.Domain.Models
 {

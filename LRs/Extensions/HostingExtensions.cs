@@ -12,5 +12,17 @@ namespace LRs.Extensions
             builder.Services.AddScoped<IBikeCategoryService, MemoryCategoryService>();
             builder.Services.AddScoped<IBikeProductService, MemoryProductService>();
         }
+        public static bool IsAjaxRequest(this HttpRequest request)
+        {
+            ArgumentNullException.ThrowIfNull(request);
+
+            return request.Headers.TryGetValue(
+                       "X-Requested-With",
+                       out var requestedWith)
+                   && string.Equals(
+                       requestedWith.ToString(),
+                       "XMLHttpRequest",
+                       StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

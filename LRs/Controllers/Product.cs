@@ -1,6 +1,6 @@
-﻿using LRs.ApiService;
-using LRs.Services.BikeCategoryService;
-using LRs.Services.BikeProductService;
+﻿using System;
+using LRs.ApiService;
+using LRs.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +19,7 @@ namespace WEB_453505_Shirko.Controllers
             _categoryService = categoryService;
         }
         [AllowAnonymous]
+        [HttpGet("/Catalog/{categoryNormalizedName?}")]
         public async Task<IActionResult> Index(
             string? categoryNormalizedName,
             int pageNo = 1)
@@ -28,8 +29,15 @@ namespace WEB_453505_Shirko.Controllers
                     categoryNormalizedName,
                     pageNo);
 
-            if (!responseData.Successfull)
+            if (!responseData.Successfull || responseData.Data is null)
                 return NotFound(responseData.ErrorMessage);
+
+            ViewBag.CurrentCategory = categoryNormalizedName;
+
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_ListPartial", responseData.Data);
+            }
 
             var categoryResponse =
                 await _categoryService.GetCategoryListAsync();
@@ -38,9 +46,8 @@ namespace WEB_453505_Shirko.Controllers
                 return NotFound(categoryResponse.ErrorMessage);
 
             ViewBag.Categories = categoryResponse.Data;
-            ViewBag.CurrentCategory = categoryNormalizedName;
-
             return View(responseData.Data);
         }
+
     }
 }

@@ -58,6 +58,28 @@ builder.Services.AddAuthorization(options =>
             policy => policy.RequireRole("POWER-USER"));
     });
 
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(20);
+
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+builder.Services.AddHybridCache();
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.InstanceName = "WEB_453505_";
+
+    options.Configuration =
+        builder.Configuration.GetConnectionString("Redis")
+        ?? throw new InvalidOperationException(
+            "ConnectionStrings:Redis не настроен.");
+});
+
 builder.Services.AddControllersWithViews();
 var connectionString =
     builder.Configuration.GetConnectionString("Postgres");
@@ -94,6 +116,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthentication();
 

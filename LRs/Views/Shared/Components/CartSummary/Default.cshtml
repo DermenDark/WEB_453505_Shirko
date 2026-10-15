@@ -1,10 +1,12 @@
-﻿@using LRs.Components
-@model CartSummaryViewModel
+﻿@model WEB_453505_Shirko.Domain.Models.Cart
 
-<a class="navbar-text ms-auto"
-   asp-controller="Cart"
-   asp-action="Index">
-    @Model.TotalAmount.ToString("0.00") руб
-    <i class="bi bi-cart"></i>
-    (@Model.TotalCount)
+<a asp-controller="Cart"
+   asp-action="Index"
+   class="nav-link">
+
+    Корзина
+
+    <span class="badge bg-secondary">
+        @Model.Count
+    </span>
 </a>
