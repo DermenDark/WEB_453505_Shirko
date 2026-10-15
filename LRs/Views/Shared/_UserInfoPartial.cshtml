@@ -33,9 +33,6 @@
             "~/images/default-profile-picture.png");
     }
 }
-
-@await Component.InvokeAsync("CartSummary")
-
 @if (User.Identity?.IsAuthenticated == true)
 {
     <div class="dropdown ms-4">

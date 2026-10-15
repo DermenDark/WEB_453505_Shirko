@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEB_453505_Shirko.Domain", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEB_453505_Shirko.API", "WEB_453505_Shirko.API\WEB_453505_Shirko.API.csproj", "{D8442568-D462-4A6E-A87F-7F9A2D60957D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEB_453505_Shirko.Tests", "WEB_453505_Shirko.Tests\WEB_453505_Shirko.Tests.csproj", "{4225083F-9321-484B-B21D-B2D382F09AE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{D8442568-D462-4A6E-A87F-7F9A2D60957D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8442568-D462-4A6E-A87F-7F9A2D60957D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8442568-D462-4A6E-A87F-7F9A2D60957D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4225083F-9321-484B-B21D-B2D382F09AE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4225083F-9321-484B-B21D-B2D382F09AE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4225083F-9321-484B-B21D-B2D382F09AE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4225083F-9321-484B-B21D-B2D382F09AE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -11,10 +11,13 @@ namespace LRs.Controllers;
 public class CartController : Controller
 {
     private readonly IProductService _productService;
-
-    public CartController(IProductService productService)
+    private readonly Cart _cart;
+    public CartController(
+        IProductService productService,
+        Cart cart)
     {
         _productService = productService;
+        _cart = cart;
     }
 
     /// <summary>
@@ -23,10 +26,7 @@ public class CartController : Controller
     [HttpGet("")]
     public IActionResult Index()
     {
-        var cart = HttpContext.Session.Get<Cart>("cart")
-                   ?? new Cart();
-
-        return View(cart);
+        return View(_cart);
     }
 
     /// <summary>
@@ -42,13 +42,7 @@ public class CartController : Controller
 
         if (response.Successfull && response.Data is not null)
         {
-            var cart =
-                HttpContext.Session.Get<Cart>("cart")
-                ?? new Cart();
-
-            cart.AddToCart(response.Data);
-
-            HttpContext.Session.Set("cart", cart);
+            _cart.AddToCart(response.Data);
         }
         else
         {
@@ -73,13 +67,8 @@ public class CartController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Remove(int id)
     {
-        var cart =
-            HttpContext.Session.Get<Cart>("cart")
-            ?? new Cart();
 
-        cart.RemoveItems(id);
-
-        HttpContext.Session.Set("cart", cart);
+        _cart.RemoveItems(id);
 
         return RedirectToAction(nameof(Index));
     }
@@ -91,13 +80,7 @@ public class CartController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Clear()
     {
-        var cart =
-            HttpContext.Session.Get<Cart>("cart")
-            ?? new Cart();
-
-        cart.ClearAll();
-
-        HttpContext.Session.Set("cart", cart);
+        _cart.ClearAll();
 
         return RedirectToAction(nameof(Index));
     }

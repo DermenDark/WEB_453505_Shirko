@@ -58,16 +58,6 @@ builder.Services.AddAuthorization(options =>
             policy => policy.RequireRole("POWER-USER"));
     });
 
-builder.Services.AddDistributedMemoryCache();
-
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(20);
-
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-});
-
 builder.Services.AddHybridCache();
 
 builder.Services.AddStackExchangeRedisCache(options =>
@@ -116,8 +106,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseSession();
-
 app.UseAuthentication();
 
 app.UseAuthorization();

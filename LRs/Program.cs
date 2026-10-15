@@ -3,6 +3,7 @@ using LRs.ApiService;
 using LRs.Components;
 using LRs.Extensions;
 using LRs.HelperClasses;
+using LRs.Services;
 using LRs.Services.Authentication;
 using LRs.Services.FileService;
 using Microsoft.AspNetCore.Authentication;
@@ -42,9 +43,6 @@ builder.Services.AddRazorPages(options =>
 {
     options.Conventions.AuthorizeFolder("/Bikes");
 });
-
-builder.Services.AddScoped<IRepository, CartRepository>();
-
 
 builder.Services
     .AddAuthentication(options =>
@@ -86,7 +84,15 @@ builder.Services
                 RoleClaimType = "role"
             };
     });
+builder.Services.AddDistributedMemoryCache();
 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(20);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+builder.Services.AddScoped<Cart, SessionCart>();
 
 builder.Services.AddAuthorization(options =>
 {
@@ -128,6 +134,8 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();
