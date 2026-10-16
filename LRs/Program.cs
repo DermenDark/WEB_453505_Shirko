@@ -3,6 +3,7 @@ using LRs.ApiService;
 using LRs.Components;
 using LRs.Extensions;
 using LRs.HelperClasses;
+using LRs.Middleware;
 using LRs.Services;
 using LRs.Services.Authentication;
 using LRs.Services.FileService;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using static System.Net.WebRequestMethods;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +25,8 @@ if (uriData is null || string.IsNullOrWhiteSpace(uriData.ApiUri))
     throw new InvalidOperationException(
         "Не найден параметр UriData:ApiUri в appsettings.json");
 }
+builder.Host.UseSerilog((context, services, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 var keycloakData = builder.Configuration
     .GetSection("KeycloakData")
@@ -130,6 +134,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseMiddleware<NonSuccessStatusLoggingMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

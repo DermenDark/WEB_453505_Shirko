@@ -77,13 +77,6 @@ var connectionString =
 var settings =
     new Npgsql.NpgsqlConnectionStringBuilder(connectionString);
 
-Console.WriteLine(
-    $"DB config: Host={settings.Host}; " +
-    $"Port={settings.Port}; " +
-    $"Database={settings.Database}; " +
-    $"Username={settings.Username}; " +
-    $"PasswordIs123456={settings.Password == "123456"}");
-
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("Postgres")));

@@ -15,7 +15,6 @@ public sealed record GetListOfProducts(
 public class GetListOfProductsHandler(AppDbContext db)
     : IRequestHandler<GetListOfProducts, ResponseData<ListModel<Bike>>>
 {
-    // Максимальный размер страницы
     private readonly int _maxPageSize = 20;
 
     public async Task<ResponseData<ListModel<Bike>>> Handle(
@@ -51,16 +50,17 @@ public class GetListOfProductsHandler(AppDbContext db)
         if (result.TotalPages == 0)
             result.TotalPages = 1;
 
-        int pageNo = request.pageNo;
+        if (request.pageNo > result.TotalPages)
+        {
+            return ResponseData<ListModel<Bike>>.Error(
+                "Номер страницы превышает общее количество страниц.");
+        }
 
-        if (pageNo < 1)
-            pageNo = 1;
-
-        if (pageNo > result.TotalPages)
-            pageNo = result.TotalPages;
+        int pageNo = Math.Max(1, request.pageNo);
 
         result.CurrentPage = pageNo;
         result.Items = await query
+            .OrderBy(b => b.Id)
             .Skip((pageNo - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
